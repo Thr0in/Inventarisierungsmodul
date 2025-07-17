@@ -10,8 +10,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
+import { concat, finalize, forkJoin, map, mergeMap, Observable, of, tap } from 'rxjs';
 import { CardComponent } from '../../components/card/card.component';
-import { concat, EMPTY, finalize, forkJoin, map, mergeMap, Observable, tap } from 'rxjs';
 import { CommentsEditorComponent } from "../../components/comments-editor/comments-editor.component";
 import { DialogComponent, DialogData } from '../../components/dialog/dialog.component';
 import { ItemEditorComponent } from '../../components/item-editor/item-editor.component';
@@ -143,6 +143,10 @@ export class InventorizationComponent {
    * Signal holding an array of input field names that should be disabled.
    */
   disabledInputs = signal<string[]>([]);
+  /**
+   * List of required input field keys.
+   */
+  requiredInputs = signal<string[]>(['cost_center', 'id', 'company']);
 
   /**
    * Signal holding the list of comments that have been persisted (saved).
@@ -237,18 +241,11 @@ export class InventorizationComponent {
    */
   saveInventorization() {
     if (this.isNew()) {
-      this.orderService.getArticleById(this.currentArticleId.articleId).subscribe({
-        next: (article) => {
-          if (article.is_inventoried) {
-            this._notify('Artikel ist bereits inventarisiert, ein neuer Inventargegenstand kann nicht erstellt werden.', 'error');
-            return;
-          }
-          this._saveNewInventorization();
-        },
-        error: (error) => {
-          this._saveNewInventorization();
-        }
-      });
+      if (this.currentArticleId.orderId !== undefined && this.currentArticleId.articleId !== undefined) {
+        this._handleArticleInventorization();
+      } else {
+        this._saveNewInventorization();
+      }
     } else if (Object.keys(this.changes()).length > 0) {
       this._saveExistingInventorization();
     } else {
@@ -437,6 +434,28 @@ export class InventorizationComponent {
     this.deletedComments.set([]);
   }
 
+
+  /**
+   * Handles the inventorization process for a new article.
+   * If the article is already inventoried, notifies the user and does not create a new item.
+   * Otherwise, proceeds to save the new inventory item.
+   * @private
+   */
+  private _handleArticleInventorization() {
+    this.orderService.getArticleById(this.currentArticleId.articleId).subscribe({
+      next: (article) => {
+        if (article.is_inventoried) {
+          this._notify('Artikel ist bereits inventarisiert, ein neuer Inventargegenstand kann nicht erstellt werden.', 'error');
+          return;
+        }
+        this._saveNewInventorization();
+      },
+      error: (error) => {
+        this._notify('Fehler beim Laden des Artikels', 'error', error);
+      }
+    });
+  }
+
   /**
    * Attempts to create a new inventory item in the backend.
    * If the item already exists, logs an error.
@@ -453,16 +472,17 @@ export class InventorizationComponent {
           tap({
             next: (newItem) => {
               this._notify('Inventargegenstand erfolgreich erstellt', 'success');
-              this._onInventorization(newItem);
             },
             error: (error) => {
               this._notify('Fehler beim Erstellen des neuen Inventargegenstands', 'error', error);
             }
           })
         ),
-        (this.currentArticleId.orderId && this.currentArticleId.articleId) ? this._updateImportedArticle() : EMPTY
+        (this.currentArticleId.orderId && this.currentArticleId.articleId) ? this._updateImportedArticle() : of({} as Article)
         ]).subscribe({
-          next: ([newItem, _]) => this._onInventorization(newItem)
+          next: ([newItem, _]) => {
+            return this._onInventorization(newItem)
+          }
         });
       }
     });
