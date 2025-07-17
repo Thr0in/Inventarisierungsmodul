@@ -1,6 +1,8 @@
 import { CommonModule } from "@angular/common";
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import Chart from 'chart.js/auto';
+import { localizePrice } from "../../app.component";
+import { CardComponent } from "../../components/card/card.component";
 import { StatisticsService } from "../../services/statistics.service";
 
 /**
@@ -15,7 +17,11 @@ interface UserOrder {
 @Component({
   selector: 'app-statistics',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    CardComponent,
+    CardComponent
+  ],
   templateUrl: './statistics.component.html',
   styleUrl: './statistics.component.css'
 })
@@ -28,7 +34,7 @@ export class StatisticsComponent implements OnInit {
   /**
    * Total price value of all orders combined.
    */
-  totalPrice: number | null = null;
+  totalPrice: string | null = null;
 
   /**
    * Array containing the top 5 users with highest order values, sorted by price descending.
@@ -60,7 +66,7 @@ export class StatisticsComponent implements OnInit {
     this.statisticsService.getStatistics().subscribe({
       next: (stats) => {
         this.totalOrders = stats.totalOrders;
-        this.totalPrice = stats.totalPrice;
+        this.totalPrice = localizePrice(stats.totalPrice);
 
         // Sort by orderPrice in descending order and take top 5
         this.userOrders = stats.names
@@ -73,10 +79,14 @@ export class StatisticsComponent implements OnInit {
       error: (err) => {
         console.error('Failed to fetch stats:', err);
         this.totalOrders = 0;
-        this.totalPrice = 0;
+        this.totalPrice = localizePrice(0);
         this.userOrders = [];
       }
     });
+  }
+
+  localizePrice(price: number): string {
+    return localizePrice(price);
   }
 
   /**
