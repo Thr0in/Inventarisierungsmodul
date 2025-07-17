@@ -1,7 +1,5 @@
 package com.hs_esslingen.insy.controller;
 
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,12 +12,12 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 public class StatisticController {
-    
+
     private final StatisticService statisticService;
-    
+
     @GetMapping("/statistics")
-    public ResponseEntity<List<StatisticDTO>> getStatistics() {
-        List<StatisticDTO> statistics = statisticService.getInventoryStatistics();
+    public ResponseEntity<StatisticDTO> getStatistics() {
+        StatisticDTO statistics = statisticService.getInventoryStatistics();
         return ResponseEntity.ok(statistics);
     }
 }
