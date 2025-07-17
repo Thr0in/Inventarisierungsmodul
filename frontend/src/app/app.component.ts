@@ -125,7 +125,7 @@ export function localizePrice(price: number | string): string {
   } else {
     numPrice = price;
   }
-  return numPrice.toString().replace('.', ',').concat('\xa0€').trim();
+  return numPrice.toFixed(2).replace('.', ',').concat('\xa0€').trim();
 }
 
 /**
