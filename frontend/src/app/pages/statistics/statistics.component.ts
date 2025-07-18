@@ -19,7 +19,6 @@ interface UserOrder {
   standalone: true,
   imports: [
     CommonModule,
-    CardComponent,
     CardComponent
   ],
   templateUrl: './statistics.component.html',
