@@ -481,7 +481,7 @@ export class InventorizationComponent {
         (this.currentArticleId.orderId && this.currentArticleId.articleId) ? this._updateImportedArticle() : of({} as Article)
         ]).subscribe({
           next: ([newItem, _]) => {
-            return this._onInventorization(newItem)
+            return this._onInventorization(newItem);
           }
         });
       }
