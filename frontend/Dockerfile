@@ -11,7 +11,7 @@ WORKDIR /app
 COPY package.json ./
 RUN npm install
 COPY . .
-RUN ng build --configuration ${build_profile}
+RUN ng build --configuration ${build_profile:-production}
 
 
 # Stage 2: Production
