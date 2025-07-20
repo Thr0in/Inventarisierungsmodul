@@ -3,13 +3,13 @@
 
 # Stage 1: Build
 FROM node:22 AS build
-ARG PROFILE="production"
-ENV PROFILE=$PROFILE
+ARG PROFILE=production
+ENV PROFILE=${PROFILE}
 WORKDIR /app
 COPY package.json ./
 RUN npm install
 COPY . .
-RUN ng build --configuration $PROFILE
+RUN ng build --configuration ${PROFILE}
 
 
 # Stage 2: Production
