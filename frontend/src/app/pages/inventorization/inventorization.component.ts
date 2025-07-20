@@ -274,7 +274,7 @@ export class InventorizationComponent {
             this.router.navigate(['/inventory']);
           },
           error: (error) => {
-            this._notify('Fehler beim Deinventarisieren des Inventargegenstands', 'error', error);
+            this._notify('Fehler beim Löschen des Inventargegenstands', 'error', error);
           }
         });
       }
