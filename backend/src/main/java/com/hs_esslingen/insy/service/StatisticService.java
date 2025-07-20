@@ -22,7 +22,6 @@ public class StatisticService {
 
     private final InventoryRepository inventoryRepository;
 
-
     /**
      * Retrieves order statistics including total orders, total price, and
      * user-specific statistics.
@@ -33,7 +32,7 @@ public class StatisticService {
      *                                      statistics.
      */
     @Transactional(readOnly = true)
-    public List<StatisticDTO> getInventoryStatistics() {
+    public StatisticDTO getInventoryStatistics() {
         try {
             Long totalInventories = inventoryRepository.countActiveInventories();
             BigDecimal totalPrice = inventoryRepository.sumActiveInventoryPrices();
@@ -41,20 +40,20 @@ public class StatisticService {
             List<Object[]> userStats = inventoryRepository.findInventoryStatisticsByUser();
 
             List<StatisticNameDTO> statisticNames = userStats.stream()
-                .map(row -> new StatisticNameDTO(
-                        (String) row[0],        // user name
-                        (Long) row[1],          // quantity
-                        (BigDecimal) row[2]     // total price
-                ))
-                .collect(Collectors.toList());
+                    .map(row -> new StatisticNameDTO(
+                            (String) row[0], // user name
+                            (Long) row[1], // quantity
+                            (BigDecimal) row[2] // total price
+                    ))
+                    .collect(Collectors.toList());
 
             StatisticDTO mainStatistic = StatisticDTO.builder()
-                .totalOrders(totalInventories != null ? totalInventories.intValue() : 0)
-                .totalPrice(totalPrice != null ? totalPrice : BigDecimal.ZERO)
-                .names(statisticNames)
-                .build();
+                    .totalOrders(totalInventories != null ? totalInventories.intValue() : 0)
+                    .totalPrice(totalPrice != null ? totalPrice : BigDecimal.ZERO)
+                    .names(statisticNames)
+                    .build();
 
-            return List.of(mainStatistic);
+            return mainStatistic;
         } catch (Exception e) {
             throw new InternalServerErrorException("Fehler beim Abrufen der Inventarstatistiken: " + e.getMessage());
         }

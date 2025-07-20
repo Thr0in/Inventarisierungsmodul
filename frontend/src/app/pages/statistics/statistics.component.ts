@@ -1,8 +1,9 @@
 import { CommonModule } from "@angular/common";
-import { HttpClient } from '@angular/common/http';
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import Chart from 'chart.js/auto';
-import { environment } from '../../../environment';
+import { localizePrice } from "../../app.component";
+import { CardComponent } from "../../components/card/card.component";
+import { StatisticsService } from "../../services/statistics.service";
 
 /**
  * Interface representing user order statistics.
@@ -16,7 +17,10 @@ interface UserOrder {
 @Component({
   selector: 'app-statistics',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    CardComponent
+  ],
   templateUrl: './statistics.component.html',
   styleUrl: './statistics.component.css'
 })
@@ -41,7 +45,7 @@ export class StatisticsComponent implements OnInit {
    */
   legendColors: string[] = ['#001f4d', '#1f3d7a', '#4a6bb3', '#7c98d4', '#aac4e7'];
 
-  constructor(private http: HttpClient) { }
+  constructor(private statisticsService: StatisticsService) { }
 
   /**
    * Angular lifecycle hook.
@@ -58,24 +62,18 @@ export class StatisticsComponent implements OnInit {
    * Renders the pie chart after successful data retrieval.
    */
   fetchStatistics(): void {
-    this.http.get<{
-      totalOrders: number;
-      totalPrice: number;
-      names: UserOrder[];
-    }[]>(`${environment.apiUrl}/statistics`).subscribe({
-      next: (data) => {
-        if (data.length > 0) {
-          const stats = data[0];
-          this.totalOrders = stats.totalOrders;
-          this.totalPrice = stats.totalPrice;
+    this.statisticsService.getStatistics().subscribe({
+      next: (stats) => {
+        this.totalOrders = stats.totalOrders;
+        this.totalPrice = stats.totalPrice;
 
-          // Sort by orderPrice in descending order and take top 5
-          this.userOrders = stats.names
-            .sort((a, b) => b.orderPrice - a.orderPrice)
-            .slice(0, 5);
+        // Sort by orderPrice in descending order and take top 5
+        this.userOrders = stats.names
+          .sort((a, b) => b.orderPrice - a.orderPrice)
+          .slice(0, 5);
 
-          this.renderChart();
-        }
+        this.renderChart();
+
       },
       error: (err) => {
         console.error('Failed to fetch stats:', err);
@@ -84,6 +82,10 @@ export class StatisticsComponent implements OnInit {
         this.userOrders = [];
       }
     });
+  }
+
+  localizePrice(price: number): string {
+    return localizePrice(price);
   }
 
   /**

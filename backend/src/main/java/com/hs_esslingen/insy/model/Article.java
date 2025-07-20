@@ -1,7 +1,7 @@
 package com.hs_esslingen.insy.model;
 
 import java.math.BigDecimal; // für monetary values
-
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,12 +17,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 
 @Entity
 @Data
@@ -56,6 +54,10 @@ public class Article {
     @Column(name = "is_inventoried")
     @Builder.Default
     private Boolean isInventoried = false;
+
+    @Column(name = "deleted_at")
+    @Builder.Default
+    private LocalDateTime deletedAt = null;
 
     @Column(name = "cost_center")
     private String costCenter;

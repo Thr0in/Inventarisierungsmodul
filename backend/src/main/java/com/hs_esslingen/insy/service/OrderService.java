@@ -30,13 +30,19 @@ public class OrderService {
 
     /**
      * Retrieves all open orders from the repository.
+     * This includes filtering out any articles that have been marked as deleted.
      *
      * @return a list of open orders wrapped in a ResponseEntity
      */
     public ResponseEntity<List<OrderResponseDTO>> getAllOpenOrders() {
         List<Order> openOrders = orderRepository.findAllByDeletedAtIsNull();
         List<OrderResponseDTO> dtos = openOrders.stream()
-                .map(orderMapper::toDto)
+                .map(order -> {
+                    order.setArticles(order.getArticles().stream()
+                            .filter(article -> article.getDeletedAt() == null)
+                            .toList());
+                    return orderMapper.toDto(order);
+                })
                 .toList();
 
         return ResponseEntity.ok(dtos);
