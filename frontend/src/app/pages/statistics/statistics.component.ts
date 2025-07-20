@@ -33,7 +33,7 @@ export class StatisticsComponent implements OnInit {
   /**
    * Total price value of all orders combined.
    */
-  totalPrice: string | null = null;
+  totalPrice: number | null = null;
 
   /**
    * Array containing the top 5 users with highest order values, sorted by price descending.
@@ -65,7 +65,7 @@ export class StatisticsComponent implements OnInit {
     this.statisticsService.getStatistics().subscribe({
       next: (stats) => {
         this.totalOrders = stats.totalOrders;
-        this.totalPrice = localizePrice(stats.totalPrice);
+        this.totalPrice = stats.totalPrice;
 
         // Sort by orderPrice in descending order and take top 5
         this.userOrders = stats.names
@@ -78,7 +78,7 @@ export class StatisticsComponent implements OnInit {
       error: (err) => {
         console.error('Failed to fetch stats:', err);
         this.totalOrders = 0;
-        this.totalPrice = localizePrice(0);
+        this.totalPrice = 0;
         this.userOrders = [];
       }
     });

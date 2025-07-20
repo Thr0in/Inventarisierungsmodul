@@ -16,7 +16,7 @@
         <div class="bg-gray-100 text-center p-6 rounded">
           <h3 class="font-medium text-lg">Gesamtwert</h3>
           <p class="text-3xl font-bold mt-2">
-            {{ totalPrice !== null ? totalPrice : '-' }}
+            {{ totalPrice !== null ? localizePrice(totalPrice) : '-' }}
           </p>
         </div>
       </div>
