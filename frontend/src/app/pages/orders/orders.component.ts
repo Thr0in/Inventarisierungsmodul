@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { AccordionComponent } from '../../components/accordion/accordion.component';
 import { CardComponent } from '../../components/card/card.component';
 import { DialogData, setupDialog } from '../../components/dialog/dialog.component';
@@ -207,7 +207,7 @@ export class OrdersComponent implements OnInit {
       return;
     }
 
-    const articleObservables = [];
+    const articleObservables: Observable<void>[] = [];
 
     for (const article of this.checkedArticles) {
       const orderId = this.getArticleOrderId(article);
