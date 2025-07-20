@@ -6,6 +6,7 @@ ARG build_profile="production"
 
 # Stage 1: Build
 FROM node:22 AS build
+ARG build_profile
 WORKDIR /app
 COPY package.json ./
 RUN npm install
