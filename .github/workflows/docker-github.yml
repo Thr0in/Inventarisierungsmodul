@@ -5,9 +5,9 @@ name: Build, docker & push to github packages
 
 on:
   push:
-    branches: ["main", "backend", "frontend"]
+    branches: ["main", "test", "backend", "frontend"]
   pull_request:
-    branches: ["main", "backend", "frontend"]
+    branches: ["main", "test", "backend", "frontend"]
   workflow_dispatch:
 
 env:
@@ -15,6 +15,7 @@ env:
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
+  BUILD_PROFILE: production
 
 jobs:
   deploy:
@@ -38,10 +39,19 @@ jobs:
         run: |
           echo "IMAGE_NAME=${IMAGE_NAME@L}" >> "${GITHUB_ENV}"
 
+      - name: Check build profile
+        if: ${{ github.ref == 'refs/heads/test'}}
+        run: |
+          echo "BUILD_PROFILE=tests" >> "${GITHUB_ENV}"
+        
+
+
       - name: Build and push Frontend to GitHub
         uses: docker/build-push-action@v5
         with:
           context: ./frontend
+          build-args: |
+            build_profile=${{ env.BUILD_PROFILE }}
           push: ${{ github.event_name != 'pull_request' }}
           tags:  ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:frontend-latest
 

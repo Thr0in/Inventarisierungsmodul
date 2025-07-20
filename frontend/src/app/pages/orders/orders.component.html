@@ -22,6 +22,11 @@
           Als ein Gegenstand
         </button>
 
+        <button mat-stroked-button matTooltip="Ausgewählte Artikel löschen." class="w-full min-w-fit" color="warn"
+          [disabled]="checkedCount() < 1" (click)="openDeleteDialog()">
+          Ausgewählte löschen
+        </button>
+
       </div>
     </app-card>
   </div>

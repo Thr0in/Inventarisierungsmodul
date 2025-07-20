@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { environment } from '../../environment';
+import { environment } from '../../environments/environment';
 import { Article } from "../models/Article";
 import { Order } from '../models/Order';
 
@@ -26,6 +26,12 @@ export class OrderService {
 
   updateOrderArticle(orderId: number, articleId: number, article: Partial<Article>): Observable<Article> {
     return this.http.patch<Article>(`${this.url}/${orderId}/items/${articleId}`, article).pipe(
+      tap(() => this.openArticlesChanged.next())
+    );
+  }
+
+  deleteOrderArticle(orderId: number, articleId: number): Observable<void> {
+    return this.http.delete<void>(`${this.url}/${orderId}/items/${articleId}`).pipe(
       tap(() => this.openArticlesChanged.next())
     );
   }

@@ -7,7 +7,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { map, Observable, startWith } from 'rxjs';
-import { environment } from '../../../environment';
+import { environment } from '../../../environments/environment';
 import { localizePrice, unLocalizePrice } from '../../app.component';
 import { Extension } from '../../models/extension';
 import { InventoryItem } from '../../models/inventory-item';

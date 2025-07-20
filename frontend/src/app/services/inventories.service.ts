@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { forkJoin, map, Observable, of, switchMap } from 'rxjs';
-import { environment } from '../../environment';
+import { environment } from '../../environments/environment';
 import { Comment } from '../models/comment';
 import { Extension } from '../models/extension';
 import { Inventories } from '../models/inventories';

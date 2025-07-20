@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import {
   MAT_DIALOG_DATA,
+  MatDialog,
   MatDialogActions,
   MatDialogClose,
   MatDialogContent,
@@ -48,4 +49,22 @@ export class DialogComponent {
   onNoClick(): void {
     this.dialogRef.close();
   }
+}
+
+
+/**
+ * Opens a dialog with the given data and sets up a callback for when the dialog is closed.
+ * @param dialog - The MatDialog instance to use for opening the dialog.
+ * @param dialogData - The data to pass to the dialog component.
+ * @param callback - The callback to call when the dialog is closed.
+ */
+export function setupDialog(dialog: MatDialog, dialogData: DialogData, callback: (result: boolean) => void): void {
+  const dialogRef = dialog.open(DialogComponent, {
+    data: dialogData,
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    callback(result);
+  });
+
 }

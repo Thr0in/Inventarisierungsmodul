@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { forkJoin, Observable } from 'rxjs';
-import { environment } from '../../environment';
+import { environment } from '../../environments/environment';
 import { Tag } from '../models/tag';
 import { Tags } from '../models/tags';
 
