@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { environment } from '../../environment';
+import { environment } from '../../environments/environment';
 import { Article } from "../models/Article";
 import { Order } from '../models/Order';
 

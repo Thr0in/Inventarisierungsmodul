@@ -8,6 +8,7 @@ import {
 } from '@angular/common/http';
 import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { AuthConfig, provideOAuthClient } from 'angular-oauth2-oidc';
+import { environment } from '../environments/environment';
 import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
@@ -22,7 +23,7 @@ export const appConfig: ApplicationConfig = {
     ),
     provideOAuthClient({
       resourceServer: {
-        allowedUrls: ['http://localhost:8080', 'https://api.insy.hs-esslingen.com'],
+        allowedUrls: [environment.apiUrl],
         sendAccessToken: true,
       }
     })
@@ -33,14 +34,14 @@ export const appConfig: ApplicationConfig = {
 // Reference: https://www.npmjs.com/package/angular-oauth2-oidc
 export const authCodeFlowConfig: AuthConfig = {
   // Url of the Identity Provider
-  issuer: 'https://auth.insy.hs-esslingen.com/realms/insy',
+  issuer: environment.issuer,
 
   // URL of the SPA to redirect the user to after login
   redirectUri: window.location.origin + '/',
 
   // The SPA's id. The SPA is registerd with this id at the auth-server
   // clientId: 'server.code',
-  clientId: 'angular-app-prod',
+  clientId: environment.clientId,
 
   // Just needed if your auth server demands a secret. In general, this
   // is a sign that the auth server is not configured with SPAs in mind
