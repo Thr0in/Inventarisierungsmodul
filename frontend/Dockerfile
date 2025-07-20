@@ -1,6 +1,8 @@
 # syntax=docker/dockerfile:1
 # escape=`
 
+ARG build_profile="production"
+
 
 # Stage 1: Build
 FROM node:22 AS build
@@ -8,7 +10,7 @@ WORKDIR /app
 COPY package.json ./
 RUN npm install
 COPY . .
-RUN npm run build
+RUN ng build --configuration ${build_profile}
 
 
 # Stage 2: Production
