@@ -30,6 +30,12 @@ export class OrderService {
     );
   }
 
+  deleteOrderArticle(orderId: number, articleId: number): Observable<void> {
+    return this.http.delete<void>(`${this.url}/${orderId}/items/${articleId}`).pipe(
+      tap(() => this.openArticlesChanged.next())
+    );
+  }
+
   getOrderById(id: number): Observable<Order> {
     return this.http.get<Order>(`${this.url}/${id}`);
   }

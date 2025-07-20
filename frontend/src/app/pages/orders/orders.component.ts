@@ -2,11 +2,14 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
+import { MatDialog } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { AccordionComponent } from '../../components/accordion/accordion.component';
 import { CardComponent } from '../../components/card/card.component';
+import { DialogData, setupDialog } from '../../components/dialog/dialog.component';
 import { Article } from '../../models/Article';
 import { Order } from '../../models/Order';
 import { OrderService } from '../../services/order.service';
@@ -28,7 +31,9 @@ import { OrderService } from '../../services/order.service';
 })
 export class OrdersComponent implements OnInit {
 
-  constructor(private readonly router: Router, private readonly orderService: OrderService) {
+  constructor(private readonly router: Router,
+    private readonly orderService: OrderService,
+    private readonly dialog: MatDialog) {
   }
 
   // Orders
@@ -195,6 +200,42 @@ export class OrdersComponent implements OnInit {
     }
 
     this.router.navigate(route, { queryParams: { itemArticles, extensionArticles } });
+  }
+
+  deleteCheckedArticles() {
+    if (this.checkedArticles.length < 1) {
+      return;
+    }
+
+    const articleObservables = [];
+
+    for (const article of this.checkedArticles) {
+      const orderId = this.getArticleOrderId(article);
+      if (orderId !== -1) {
+        articleObservables.push(this.orderService.deleteOrderArticle(orderId, article.article_id));
+      }
+    }
+
+    forkJoin(articleObservables).subscribe(() => {
+      this.checkedArticles = [];
+      this.allChecked = false;
+      this.ngOnInit();
+    });
+  }
+
+  openDeleteDialog() {
+    const data: DialogData = {
+      title: 'Ausgewählte Artikel löschen?',
+      description: 'Möchten Sie alle ausgewählten Artikel wirklich löschen?',
+      confirmButtonText: 'Löschen',
+      cancelButtonText: 'Abbrechen'
+    };
+
+    setupDialog(this.dialog, data, (result) => {
+      if (result) {
+        this.deleteCheckedArticles();
+      }
+    });
   }
 
 }

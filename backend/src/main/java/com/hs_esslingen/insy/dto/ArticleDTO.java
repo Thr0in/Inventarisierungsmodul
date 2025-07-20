@@ -1,6 +1,7 @@
 package com.hs_esslingen.insy.dto;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,6 +25,9 @@ public class ArticleDTO {
 
     @JsonProperty("is_inventoried")
     private Boolean isInventoried;
+
+    @JsonProperty("deleted_at")
+    private LocalDateTime deletedAt;
 
     @JsonProperty("inventories_serial_number")
     private String serialNumber;

@@ -13,7 +13,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { concat, finalize, forkJoin, map, mergeMap, Observable, of, tap } from 'rxjs';
 import { CardComponent } from '../../components/card/card.component';
 import { CommentsEditorComponent } from "../../components/comments-editor/comments-editor.component";
-import { DialogComponent, DialogData } from '../../components/dialog/dialog.component';
+import { DialogData, setupDialog } from '../../components/dialog/dialog.component';
 import { ItemEditorComponent } from '../../components/item-editor/item-editor.component';
 import { TagsEditorComponent } from "../../components/tags-editor/tags-editor.component";
 import { Article } from '../../models/Article';
@@ -258,14 +258,14 @@ export class InventorizationComponent {
    * If confirmed, deletes the item and navigates back to the inventory list.
    */
   openDeleteDialog() {
-    const data = {
+    const data: DialogData = {
       title: 'Gegenstand wirklich löschen?',
       description: 'Der Gegenstand wird aus dem Inventar entfernt und kann nicht wiederhergestellt werden.',
       cancelButtonText: 'Abbrechen',
       confirmButtonText: 'Löschen'
     };
 
-    this._handleDialog(data, (result) => {
+    setupDialog(this.dialog, data, (result) => {
       if (result) {
         const id = this.editableInventoryItem().id;
         this.inventoriesService.deleteInventoryById(id).subscribe({
@@ -286,14 +286,14 @@ export class InventorizationComponent {
    * If confirmed, deinventorizes the inventory item and navigates to its detail page.
    */
   openDeinventorizationDialog() {
-    const data = {
+    const data: DialogData = {
       title: 'Gegenstand wirklich deinventarisieren?',
       description: 'Der Gegenstand wird archiviert und kann nicht wiederhergestellt werden.',
       cancelButtonText: 'Abbrechen',
       confirmButtonText: 'Deinventarisieren'
     };
 
-    this._handleDialog(data, (result) => {
+    setupDialog(this.dialog, data, (result) => {
       if (result) {
         const id = this.editableInventoryItem().id;
         this.inventoriesService.deinventorizeInventoryById(id).subscribe({
@@ -306,20 +306,6 @@ export class InventorizationComponent {
           }
         });
       }
-    });
-  }
-
-  /**
-   * Opens a dialog with the provided data and executes a callback with the result.
-   * This is used for confirmation dialogs like deletion or deinventorization.
-   * @param dialogData The data to be passed to the dialog.
-   * @param callback The function to call with the dialog result.
-   */
-  private _handleDialog(dialogData: DialogData, callback: (result: any) => void) {
-    const dialogRef = this.dialog.open(DialogComponent, { data: dialogData });
-
-    dialogRef.afterClosed().subscribe(result => {
-      callback(result);
     });
   }
 

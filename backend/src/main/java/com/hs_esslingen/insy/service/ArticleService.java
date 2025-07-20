@@ -1,5 +1,6 @@
 package com.hs_esslingen.insy.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -81,13 +82,7 @@ public class ArticleService {
         // After saving, check if all items in the order have been inventoried
         // and mark the order as processed if they have.
         if (dto.getIsInventoried()) {
-            Order order = saved.getOrder();
-            boolean allInventoried = order.getArticles().stream()
-                    .allMatch(art -> art.getIsInventoried() != null && art.getIsInventoried());
-
-            if (allInventoried) {
-                orderService.markOrderAsProcessed(order.getId());
-            }
+            checkAndMarkOrderAsProcessed(saved);
         }
 
         return ResponseEntity.ok(articleMapper.toDto(saved));
@@ -156,10 +151,33 @@ public class ArticleService {
     public ResponseEntity<Void> deleteArticle(Integer articleId) {
         Optional<Article> article = articleRepository.findById(articleId);
         if (article.isPresent()) {
-            articleRepository.delete(article.get());
+            article.get().setDeletedAt(LocalDateTime.now());
+            Article saved = articleRepository.save(article.get());
+
+            checkAndMarkOrderAsProcessed(saved);
+
+            // articleRepository.delete(article.get());
             return ResponseEntity.noContent().build();
         } else {
             throw new NotFoundException("Article with id " + articleId + " not found.");
+        }
+    }
+
+    /**
+     * Checks if all articles in the order are inventoried or deleted, and marks the
+     * order as processed if they are.
+     *
+     * @param article the article to check
+     */
+    private void checkAndMarkOrderAsProcessed(Article article) {
+        Order order = article.getOrder();
+        boolean allInventoried = order.getArticles().stream()
+                .allMatch(art -> art.getIsInventoried() != null
+                        && art.getIsInventoried()
+                        || art.getDeletedAt() != null);
+
+        if (allInventoried) {
+            orderService.markOrderAsProcessed(order.getId());
         }
     }
 }
