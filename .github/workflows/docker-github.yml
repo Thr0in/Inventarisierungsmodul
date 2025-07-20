@@ -51,7 +51,7 @@ jobs:
         with:
           context: ./frontend
           build-args: |
-            build_profile=${{ env.BUILD_PROFILE }}
+            PROFILE=${{ env.BUILD_PROFILE }}
           push: ${{ github.event_name != 'pull_request' }}
           tags:  ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:frontend-latest
 
