@@ -156,7 +156,6 @@ public class ArticleService {
 
             checkAndMarkOrderAsProcessed(saved);
 
-            // articleRepository.delete(article.get());
             return ResponseEntity.noContent().build();
         } else {
             throw new NotFoundException("Article with id " + articleId + " not found.");
