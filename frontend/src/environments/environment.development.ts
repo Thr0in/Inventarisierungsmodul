@@ -1,6 +1,6 @@
 export const environment = {
     // This is the environment configuration for the frontend application.
-    apiUrl: 'https://localhost:8080',
+    apiUrl: 'http://localhost:8080',
 
     // Regex to match price format with optional Euro sign
     // Allowed are point and comma as decimal separator, with up to two decimal places
