@@ -8,12 +8,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { map, Observable, startWith } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { localizePrice, unLocalizePrice } from '../../app.component';
 import { Extension } from '../../models/extension';
 import { InventoryItem } from '../../models/inventory-item';
 import { AuthenticationService } from '../../services/authentication.service';
 import { CacheInventoryService } from '../../services/cache-inventory.service';
 import { InventoriesService } from '../../services/inventories.service';
+import { localizePrice, unLocalizePrice } from '../../utils';
 
 /**
  * ItemEditorComponent

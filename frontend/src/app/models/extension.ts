@@ -1,4 +1,4 @@
-import { localizePrice } from "../app.component";
+import { localizePrice } from "../utils";
 import { Article } from "./Article";
 
 
