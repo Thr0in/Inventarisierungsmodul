@@ -10,7 +10,7 @@
     <!-- Hero content with limited width -->
     <div class="text-center px-4 z-10 max-w-3xl mx-auto flex flex-col items-center">
       <h1 class="text-5xl md:text-6xl font-bold mb-4 text-he-red">
-        @if (authService.validToken()) {
+        @if (authService.isAuthorised()) {
         Willkommen zurück, {{authService.getUsername().replace(' ', '&nbsp;')}}!
         } @else {
         Willkommen zu INSY!
