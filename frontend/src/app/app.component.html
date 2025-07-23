@@ -34,7 +34,7 @@
           [class]="buttonClasses">Inventarliste</a>
         <a (click)="updateCurrentPageTitle('Bestellungen')" routerLink="/orders"
           [routerLinkActive]="buttonActiveClasses" [routerLinkActiveOptions]="{ exact: true }" [class]="buttonClasses">
-          @if (authService.validToken()) {
+          @if (authService.isAuthorised()) {
           <span [matBadge]="numberOfOpenArticles()" matBadgeOverlap="false" matBadgeColor="accent"
             [matBadgeHidden]="numberOfOpenArticles() === 0">Bestellungen</span>
           } @else {
@@ -83,7 +83,7 @@
           [class]="buttonClasses">Inventarliste</a>
         <a (click)="updateCurrentPageTitle('Bestellungen')" routerLink="/orders"
           [routerLinkActive]="buttonActiveClasses" [routerLinkActiveOptions]="{ exact: true }" [class]="buttonClasses">
-          @if (authService.validToken()) {
+          @if (authService.isAuthorised()) {
           <span [matBadge]="numberOfOpenArticles()" matBadgeOverlap="false" matBadgeColor="accent"
             [matBadgeHidden]="numberOfOpenArticles() === 0">Bestellungen</span>
           } @else {
