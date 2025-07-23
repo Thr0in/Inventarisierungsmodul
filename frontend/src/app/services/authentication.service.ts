@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { OAuthService } from 'angular-oauth2-oidc';
-import { environment } from '../../environments/environment';
+import { environment } from '../../environments/environment.tests';
 import { authCodeFlowConfig } from '../app.config';
 import { OrderService } from './order.service';
 
@@ -85,9 +85,11 @@ export class AuthenticationService {
    * @returns {boolean} - Returns true if both the ID token and access token are valid, false otherwise.
    */
   validToken(): boolean {
-    return this.oauthService.hasValidIdToken() &&
-      this.oauthService.hasValidAccessToken() &&
-      this.getRoles().includes(environment.requiredRole);
+    return this.oauthService.hasValidIdToken() && this.oauthService.hasValidAccessToken();
+  }
+
+  isAuthorised(): boolean {
+    return this.validToken() && this.getRoles().includes(environment.requiredRole);
   }
 
   /**

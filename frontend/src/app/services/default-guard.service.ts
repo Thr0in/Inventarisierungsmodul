@@ -11,7 +11,7 @@ export class DefaultGuardService {
     private readonly router: Router) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): MaybeAsync<GuardResult> {
-    if (this.authService.validToken()) {
+    if (this.authService.isAuthorised()) {
       return true;
     }
     this.router.navigate(['/unauthorised'], { skipLocationChange: true });
