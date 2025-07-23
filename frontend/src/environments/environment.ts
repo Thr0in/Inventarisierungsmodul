@@ -10,4 +10,5 @@ export const environment = {
 
     clientId: "angular-app-prod",
     issuer: "https://auth.insy.hs-esslingen.com/realms/insy",
+    requiredRole: "insy"
 }
