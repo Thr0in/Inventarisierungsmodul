@@ -8,7 +8,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { localizePrice } from '../../app.component';
 import { CardComponent } from '../../components/card/card.component';
 import { DialogComponent, DialogData } from '../../components/dialog/dialog.component';
 import { InventoryListComponent } from '../../components/inventory-list/inventory-list.component';
@@ -19,6 +18,7 @@ import { InventoryItem, inventoryItemDisplayNames } from '../../models/inventory
 import { ArticleId, fixSingleArticleString } from '../../models/Order';
 import { InventoriesService } from '../../services/inventories.service';
 import { OrderService } from '../../services/order.service';
+import { localizePrice } from '../../utils';
 @Component({
   selector: 'app-extension-inventorization',
   imports: [

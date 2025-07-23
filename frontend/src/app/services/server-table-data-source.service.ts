@@ -6,10 +6,10 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { DateTime } from 'luxon';
 import { BehaviorSubject, debounceTime, Observable } from 'rxjs';
-import { localizePrice } from '../app.component';
 import { Inventories } from '../models/inventories';
 import { InventoryItem } from '../models/inventory-item';
 import { Tag } from '../models/tag';
+import { localizePrice } from '../utils';
 import { InventoriesService } from './inventories.service';
 import { TagsService } from './tags.service';
 

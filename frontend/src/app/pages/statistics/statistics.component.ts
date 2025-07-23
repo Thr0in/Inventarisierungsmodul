@@ -1,9 +1,9 @@
 import { CommonModule } from "@angular/common";
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import Chart from 'chart.js/auto';
-import { localizePrice } from "../../app.component";
 import { CardComponent } from "../../components/card/card.component";
 import { StatisticsService } from "../../services/statistics.service";
+import { localizePrice } from "../../utils";
 
 /**
  * Interface representing user order statistics.

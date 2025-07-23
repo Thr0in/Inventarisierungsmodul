@@ -5,13 +5,13 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatExpansionModule, MatExpansionPanel } from '@angular/material/expansion';
 import { Router, RouterModule } from '@angular/router';
-import { localizePrice, unLocalizePrice } from '../../app.component';
 import { DynamicListComponent } from "../../components/dynamic-list/dynamic-list.component";
 import { Change } from '../../models/change';
 import { Comment } from '../../models/comment';
 import { Extension, extensionDisplayNames, extensionLocalizePrice } from '../../models/extension';
 import { InventoryItem, inventoryItemDisplayNames } from '../../models/inventory-item';
 import { getTagColor, Tag } from '../../models/tag';
+import { localizePrice, unLocalizePrice } from '../../utils';
 
 /**
  * DetailsComponent

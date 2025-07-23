@@ -18,12 +18,13 @@ import { ItemEditorComponent } from '../../components/item-editor/item-editor.co
 import { TagsEditorComponent } from "../../components/tags-editor/tags-editor.component";
 import { Article } from '../../models/Article';
 import { Comment } from '../../models/comment';
-import { InventoryItem, inventoryItemDisplayNames, inventoryItemFromArticle } from '../../models/inventory-item';
+import { InventoryItem, inventoryItemDisplayNames } from '../../models/inventory-item';
 import { ArticleId, fixSingleArticleString } from '../../models/Order';
 import { Tag } from '../../models/tag';
 import { InventoriesService } from '../../services/inventories.service';
 import { OrderService } from '../../services/order.service';
 import { TagsService } from '../../services/tags.service';
+import { inventoryItemFromArticle } from '../../utils';
 
 
 /**
