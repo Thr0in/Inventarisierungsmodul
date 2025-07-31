@@ -7,10 +7,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -34,6 +36,8 @@ import org.springframework.web.cors.CorsConfiguration;
 @EnableWebSecurity
 @Profile("production")
 public class SecurityConfig {
+    @Autowired
+    private Environment environment;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
@@ -42,7 +46,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration corsConfiguration = new CorsConfiguration();
-                    corsConfiguration.addAllowedOrigin("https://insy.hs-esslingen.com");
+                    corsConfiguration.addAllowedOrigin(environment.getProperty("allowed.origin"));
                     corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE"));
                     corsConfiguration.addAllowedHeader("*");
                     return corsConfiguration;
@@ -59,7 +63,8 @@ public class SecurityConfig {
 
     @Bean
     public JwtDecoder jwtDecoder() {
-        return JwtDecoders.fromIssuerLocation("https://auth.insy.hs-esslingen.com/realms/insy");
+        return JwtDecoders
+                .fromIssuerLocation(environment.getProperty("spring.security.oauth2.resourceserver.jwt.issuer-uri"));
     }
 
     // Hardcoded user to allow BeSy to access the API

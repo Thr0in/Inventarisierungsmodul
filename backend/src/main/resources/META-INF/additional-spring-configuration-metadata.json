@@ -1,0 +1,10 @@
+{
+    "properties": [
+        {
+            "name": "allowed.origin",
+            "type": "java.lang.String",
+            "description": "The allowed origin for CORS requests.",
+            "defaultValue": "https://insy.hs-esslingen.com"
+        }
+    ]
+}

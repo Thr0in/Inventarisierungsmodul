@@ -2,9 +2,11 @@ package com.hs_esslingen.insy.security;
 
 import java.util.Arrays;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,6 +26,8 @@ import org.springframework.web.cors.CorsConfiguration;
 @EnableWebSecurity
 @Profile("dev") // Activate this configuration only in the "dev" profile
 public class SecurityConfigDev {
+    @Autowired
+    private Environment environment;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -31,27 +35,17 @@ public class SecurityConfigDev {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration corsConfiguration = new CorsConfiguration();
-                    corsConfiguration.addAllowedOrigin("http://localhost:4200"); // Allow local development origin
+                    corsConfiguration.addAllowedOrigin(environment.getProperty("allowed.origin"));
                     corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE"));
                     corsConfiguration.addAllowedHeader("*");
                     return corsConfiguration;
                 }))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, "/orders").hasAnyRole("SYSTEM") // Only allow BeSy to create
-                                                                                          // orders
-                        .requestMatchers(HttpMethod.GET, "/**").permitAll() // Disabling all protection for testing
-                                                                            // purposes
-                        .requestMatchers(HttpMethod.PUT, "/**").permitAll() // Disabling all protection for testing
-                                                                            // purposes
-                        .requestMatchers(HttpMethod.PATCH, "/**").permitAll() // Disabling all protection for testing
-                                                                              // purposes
-                        .requestMatchers(HttpMethod.POST, "/**").permitAll() // Disabling all protection for testing
-                                                                             // purposes
-                        .requestMatchers(HttpMethod.DELETE, "/**").permitAll() // Disabling all protection for testing
-                                                                               // purposes
-                        .requestMatchers(HttpMethod.POST, "/upload/csv").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/download/xls").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
+                        .requestMatchers(HttpMethod.GET, "/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/**").permitAll()
+                        .requestMatchers(HttpMethod.PATCH, "/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/**").permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults()) // Enable HTTP Basic authentication for BeSy-API
                 .oauth2ResourceServer((oauth2) -> oauth2
@@ -61,7 +55,8 @@ public class SecurityConfigDev {
 
     @Bean
     public JwtDecoder jwtDecoder() {
-        return JwtDecoders.fromIssuerLocation("https://auth.insy.hs-esslingen.com/realms/insy");
+        return JwtDecoders
+                .fromIssuerLocation(environment.getProperty("spring.security.oauth2.resourceserver.jwt.issuer-uri"));
     }
 
     // Hardcoded user to allow BeSy to access the API
