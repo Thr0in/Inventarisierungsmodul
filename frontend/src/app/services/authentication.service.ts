@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { OAuthService } from 'angular-oauth2-oidc';
-import { environment } from '../../environments/environment.tests';
+import { environment } from '../../environments/environment';
 import { authCodeFlowConfig } from '../app.config';
 import { OrderService } from './order.service';
 
